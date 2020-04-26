@@ -11,6 +11,8 @@ This Service is designed to help other components with authentication.
 
 ### Setup
 ```
+git clone https://github.com/fabiomartinsbrrj/authentication-service.git
+
 ./gradlew clean build
 ```
 ### Unit Tests
