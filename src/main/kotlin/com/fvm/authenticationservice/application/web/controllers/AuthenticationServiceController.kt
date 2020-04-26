@@ -2,7 +2,7 @@ package com.fvm.authenticationservice.application.web.controllers
 
 import com.fvm.authenticationservice.application.errors.HttpErrorResponse
 import com.fvm.authenticationservice.domain.entities.AuthenticationRequest
-import com.fvm.authenticationservice.domain.services.AuthenticationService
+import com.fvm.authenticationservice.domain.services.authentication.AuthenticationService
 import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.OpenApi
 import io.javalin.plugin.openapi.annotations.OpenApiContent

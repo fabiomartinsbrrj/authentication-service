@@ -34,9 +34,7 @@ object AuthenticationServiceComponentTest {
         request
             .`when`()
             .body(
-                getPayload(
-                    "AbTp9!foo"
-                )
+                getPayload("AbTp9!foo")
             )
             .accept(ContentType.JSON)
             .post("/authentication")
@@ -50,9 +48,7 @@ object AuthenticationServiceComponentTest {
         request
             .`when`()
             .body(
-                getPayload(
-                    "AbTp"
-                )
+                getPayload("AbTp")
             )
             .accept(ContentType.JSON)
             .post("/authentication")

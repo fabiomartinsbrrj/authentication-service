@@ -1,8 +1,10 @@
-package com.fvm.authenticationservice.domain.services
+package com.fvm.authenticationservice.domain.services.authentication.processor
 
 import com.fvm.authenticationservice.domain.entities.AuthenticationRequest
 import com.fvm.authenticationservice.domain.exceptions.ValidationException
-import java.util.Objects
+import com.fvm.authenticationservice.domain.services.authentication.provider.AuthenticationProvider
+import com.fvm.authenticationservice.domain.services.authentication.provider.PasswordProvider
+import java.lang.IllegalArgumentException
 
 class PasswordAuthenticationProcessor(nextProcessor:PasswordAuthenticationProcessor?) : AuthenticationProcessor(nextProcessor){
     private val regex = Regex("^(?=.*[0..9])(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\\W+).{9,}\$")
@@ -15,14 +17,14 @@ class PasswordAuthenticationProcessor(nextProcessor:PasswordAuthenticationProces
                 """.trimMargin()
 
 
-    override fun validate(authenticationProvider: AuthenticationProvider)  {
+    override fun execute(authenticationProvider: AuthenticationProvider)  {
         if (authenticationProvider is PasswordProvider) {
-            val authenticationRequest:AuthenticationRequest = (authenticationProvider as PasswordProvider).authenticationRequest
+            val authenticationRequest:AuthenticationRequest = authenticationProvider.authenticationRequest
             if (!regex.matches(authenticationRequest.password)) {
                 throw ValidationException(detailsOfValidation)
             }
-        } else if (!Objects.isNull(nextProcessor)) {
-            nextProcessor?.validate(authenticationProvider)
+        } else {
+            throw IllegalArgumentException("The informed provider is not a PasswordProvider.")
         }
     }
 }

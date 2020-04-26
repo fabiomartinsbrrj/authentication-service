@@ -1,4 +1,4 @@
-package com.fvm.authenticationservice.domain.services
+package com.fvm.authenticationservice.domain.services.authentication
 
 import com.fvm.authenticationservice.domain.entities.AuthenticationRequest
 
