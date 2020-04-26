@@ -3,22 +3,25 @@ package com.fvm.authenticationservice.resources.services
 import com.fvm.authenticationservice.domain.entities.AuthenticationRequest
 import com.fvm.authenticationservice.domain.exceptions.ValidationException
 import com.fvm.authenticationservice.domain.exceptions.enum.DomainErrors
-import com.fvm.authenticationservice.resources.services.AuthenticationServiceImpl
+import com.fvm.authenticationservice.domain.services.authentication.processor.AuthenticationProcessor
+import com.fvm.authenticationservice.domain.services.authentication.processor.PasswordAuthenticationProcessor
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
+
 
 class AuthenticationServiceImplTest  {
 
+    private fun getChainOfAuthProcessor(): AuthenticationProcessor = PasswordAuthenticationProcessor(null)
 
     @Test
     fun `given a valid password must perform successfully`() {
         val password =
             AuthenticationRequest("AbTp9!foo")
 
-        AuthenticationServiceImpl().authentication(password)
+        AuthenticationServiceImpl(getChainOfAuthProcessor()).authentication(password)
 
         assertTrue(true)
     }
@@ -28,7 +31,7 @@ class AuthenticationServiceImplTest  {
         val password = AuthenticationRequest("A")
 
         val exception: ValidationException = assertThrows<ValidationException>  {
-            AuthenticationServiceImpl().authentication(password)
+            AuthenticationServiceImpl(getChainOfAuthProcessor()).authentication(password)
         }
 
         assertTrue(exception.type== DomainErrors.VALIDATION_EXCEPTION)
@@ -47,7 +50,7 @@ class AuthenticationServiceImplTest  {
             {
                 passwordRequests.forEach {
                     val exception: ValidationException = assertThrows<ValidationException> {
-                        AuthenticationServiceImpl().authentication(it)
+                        AuthenticationServiceImpl(getChainOfAuthProcessor()).authentication(it)
                     }
                     assertEquals(exception.type , DomainErrors.VALIDATION_EXCEPTION)
                 }

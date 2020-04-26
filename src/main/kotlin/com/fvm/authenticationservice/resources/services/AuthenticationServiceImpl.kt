@@ -1,28 +1,13 @@
 package com.fvm.authenticationservice.resources.services
 
 import com.fvm.authenticationservice.domain.entities.AuthenticationRequest
-import com.fvm.authenticationservice.domain.exceptions.ValidationException
-import com.fvm.authenticationservice.domain.services.AuthenticationService
+import com.fvm.authenticationservice.domain.services.authentication.AuthenticationService
+import com.fvm.authenticationservice.domain.services.authentication.processor.AuthenticationProcessor
+import com.fvm.authenticationservice.domain.services.authentication.provider.PasswordProvider
 
-class AuthenticationServiceImpl :
-    AuthenticationService {
-    private val regex = Regex("^(?=.*[0..9])(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\\W+).{9,}\$")
-    private val detailsOfValidation = """
-                                        |Nine or more characters
-                                        |At least 1 digit
-                                        |At least 1 lowercase letter
-                                        |At least 1 upper letter
-                                        |At least 1 special character
-                """.trimMargin()
+class AuthenticationServiceImpl(private val authProcessorChain:AuthenticationProcessor) : AuthenticationService {
 
-    override fun authentication(authenticationRequest: AuthenticationRequest)  {
-
-        if (!regex.matches(authenticationRequest.password)) {
-                throw ValidationException(
-                    detailsOfValidation
-                )
-        }
-
-    }
+    override fun authentication(authenticationRequest: AuthenticationRequest) =
+        authProcessorChain.authentication(PasswordProvider(authenticationRequest))
 
 }

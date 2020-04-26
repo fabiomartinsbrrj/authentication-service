@@ -1,5 +1,5 @@
-build:
-  maxIssues: 0
+EmptyClassBlockbuild:
+  maxIssues: 3
 
 config:
   validation: true

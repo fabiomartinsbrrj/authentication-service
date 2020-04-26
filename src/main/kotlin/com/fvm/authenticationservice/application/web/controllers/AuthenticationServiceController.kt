@@ -2,7 +2,7 @@ package com.fvm.authenticationservice.application.web.controllers
 
 import com.fvm.authenticationservice.application.errors.HttpErrorResponse
 import com.fvm.authenticationservice.domain.entities.AuthenticationRequest
-import com.fvm.authenticationservice.domain.services.AuthenticationService
+import com.fvm.authenticationservice.domain.services.authentication.AuthenticationService
 import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.OpenApi
 import io.javalin.plugin.openapi.annotations.OpenApiContent
@@ -17,10 +17,10 @@ class AuthenticationServiceController(
     private val logger = LoggerFactory.getLogger(AuthenticationServiceController::class.java)
 
     @OpenApi(
-        summary = "Authentication the password",
+        summary = "Authentication",
         operationId = "authentication",
         tags = ["AuthenticationService"],
-        requestBody = OpenApiRequestBody( [OpenApiContent(AuthenticationRequest::class)],true, "The password"),
+        requestBody = OpenApiRequestBody( [OpenApiContent(AuthenticationRequest::class)],true, "Information to do the authentication"),
         responses = [
             OpenApiResponse(HttpStatus.OK_200.toString() , description = "valid authentication"),
             OpenApiResponse(HttpStatus.UNPROCESSABLE_ENTITY_422.toString(),
@@ -29,11 +29,12 @@ class AuthenticationServiceController(
         ]
     )
     fun authentication(ctx: Context) {
-        val passwordRequest: AuthenticationRequest = ctx.bodyValidator<AuthenticationRequest>().get()
+        val authenticationRequest:AuthenticationRequest = ctx.bodyValidator<AuthenticationRequest>().get()
 
-        authenticationService.authentication(passwordRequest)
+        authenticationService.authentication(authenticationRequest)
 
         ctx.status(HttpStatus.OK_200)
+
     }
 
 
